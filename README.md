@@ -1,33 +1,58 @@
-# Secure Private Cloud (On-Premise Simulation)
+# Secure Private Cloud On-Premise
 
-## Overview
-This project simulates a secure internal cloud system built on an on-premise server.
-All services are isolated from public access and can only be reached through secure
-connections.
+Project ini adalah simulasi **server internal on-premise** yang hanya bisa diakses melalui
+jalur aman (VPN WireGuard dan SSH Port Forwarding).
 
-## Objectives
-- Implement secure internal service access
-- Prevent direct public exposure of services
-- Apply VPN and SSH-based access control
+Project ini dibuat untuk menunjukkan pemahaman tentang:
+- Networking dasar
+- VPN tunnel
+- Akses service internal secara aman
+- Security awareness (tidak expose service langsung)
 
-## Technology Stack
+---
+
+## Tujuan Project
+
+- Membangun web server internal (Nginx)
+- Server **tidak bisa diakses langsung dari jaringan luar**
+- Akses hanya diperbolehkan melalui:
+  - VPN WireGuard
+  - SSH Port Forwarding
+
+---
+
+## Arsitektur Singkat
+
+Client (Windows)
+→ VPN WireGuard
+→ Server Ubuntu 22.04 (On-Premise)
+→ Nginx (Internal Web Server)
+
+---
+
+## Teknologi yang Digunakan
+
 - Ubuntu Server 22.04
 - WireGuard VPN
 - OpenSSH
 - Nginx
 - UFW Firewall
 
-## Architecture
-- Internal services run on private IP addresses
-- VPN tunnel used for internal network access
-- SSH used for administration and port forwarding
+---
 
-## Security Approach
-- No public HTTP exposure
-- VPN-only internal access
-- SSH key-based authentication
-- Port forwarding for restricted environments
+## Konsep Keamanan
 
-## Author
-Dimas Adi Prabowo
+- ICMP (ping) diizinkan untuk testing koneksi
+- HTTP **tidak diekspos langsung**
+- Akses web dilakukan menggunakan SSH Port Forwarding
+- Simulasi server internal seperti di lingkungan perusahaan
+
+---
+
+## Cara Akses Web Server
+
+1. Aktifkan WireGuard tunnel
+2. Login SSH ke server:
+   ```bash
+   ssh -L 8080:10.10.0.1:80 user@10.10.0.1
 
