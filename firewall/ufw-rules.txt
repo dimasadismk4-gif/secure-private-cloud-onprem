@@ -1,0 +1,12 @@
+Allow SSH:
+- 22/tcp (VPN only)
+
+Allow WireGuard:
+- 51820/udp
+
+Block public HTTP:
+- 80/tcp (public)
+
+Allow internal HTTP:
+- 80/tcp (VPN interface)
+

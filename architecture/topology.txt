@@ -1,0 +1,9 @@
+Client (Windows)
+ |
+ | WireGuard VPN (10.10.0.0/24)
+ |
+Ubuntu Server
+ - Nginx (Internal Web)
+ - SSH
+ - Firewall (UFW)
+
