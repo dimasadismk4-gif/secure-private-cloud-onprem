@@ -1,0 +1,7 @@
+wg genkey | tee server.key | wg pubkey > server.pub
+wg-quick up wg0
+sudo wg
+ssh -L 8080:10.10.0.1:80 dimas@10.10.0.1
+curl http://10.10.0.1
+ufw status
+
