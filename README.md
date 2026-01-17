@@ -1,58 +1,97 @@
-# Secure Private Cloud On-Premise
+# Secure Internal Private Cloud (On-Premise Simulation)
 
-Project ini adalah simulasi **server internal on-premise** yang hanya bisa diakses melalui
-jalur aman (VPN WireGuard dan SSH Port Forwarding).
+Project ini mensimulasikan **infrastruktur server internal perusahaan**
+yang **tidak mengekspos layanan web ke publik**, dan hanya dapat diakses
+melalui jalur aman (VPN dan SSH Port Forwarding).
 
-Project ini dibuat untuk menunjukkan pemahaman tentang:
-- Networking dasar
-- VPN tunnel
-- Akses service internal secara aman
-- Security awareness (tidak expose service langsung)
+Project ini menekankan:
+- Pemisahan jaringan
+- Kontrol akses service
+- Prinsip security-first
+- Cara kerja infrastruktur internal di dunia kerja
 
 ---
 
-## Tujuan Project
+## Problem Statement
 
-- Membangun web server internal (Nginx)
-- Server **tidak bisa diakses langsung dari jaringan luar**
-- Akses hanya diperbolehkan melalui:
-  - VPN WireGuard
+Banyak server internal perusahaan:
+- Tidak boleh diakses langsung via IP
+- Tidak membuka port HTTP ke publik
+- Hanya bisa diakses oleh IT / Admin tertentu
+
+Project ini mensimulasikan kondisi tersebut.
+
+---
+
+## Objectives
+
+- Membangun web server internal berbasis Nginx
+- Menempatkan server dalam jaringan private
+- Mengamankan akses menggunakan:
+  - WireGuard VPN
   - SSH Port Forwarding
+- Membuktikan bahwa web hanya bisa diakses
+  melalui jalur yang terkontrol
 
 ---
 
-## Arsitektur Singkat
+## Infrastructure Overview
 
 Client (Windows)
-→ VPN WireGuard
-→ Server Ubuntu 22.04 (On-Premise)
-→ Nginx (Internal Web Server)
+→ WireGuard VPN (Encrypted Tunnel)
+→ Ubuntu Server 22.04 (On-Premise)
+→ Nginx (Internal Web Service)
 
 ---
 
-## Teknologi yang Digunakan
+## Network Design
 
-- Ubuntu Server 22.04
-- WireGuard VPN
-- OpenSSH
-- Nginx
-- UFW Firewall
-
----
-
-## Konsep Keamanan
-
-- ICMP (ping) diizinkan untuk testing koneksi
-- HTTP **tidak diekspos langsung**
-- Akses web dilakukan menggunakan SSH Port Forwarding
-- Simulasi server internal seperti di lingkungan perusahaan
+- VPN Network: `10.10.0.0/24`
+- Server IP: `10.10.0.1`
+- Client VPN IP: `10.10.0.2`
+- Public HTTP access: **DISABLED**
 
 ---
 
-## Cara Akses Web Server
+## Security Design
 
-1. Aktifkan WireGuard tunnel
-2. Login SSH ke server:
-   ```bash
-   ssh -L 8080:10.10.0.1:80 user@10.10.0.1
+| Component | Policy |
+|---|---|
+| WireGuard | Encrypted access |
+| SSH | Authenticated admin access |
+| HTTP (80) | Not exposed |
+| Firewall | Default deny |
+| ICMP | Allowed for testing only |
 
+---
+
+## Access Flow (How It Works)
+
+1. Client connects to WireGuard VPN
+2. Client can **ping server** (network verified)
+3. Client **cannot access HTTP directly**
+4. Client establishes SSH session with port forwarding
+5. Local port is mapped to internal web service
+6. Web becomes accessible **only while SSH is active**
+
+---
+
+## Accessing Internal Web Service
+
+### Step 1 – Connect VPN
+```bash
+ping 10.10.0.1
+
+### Step 2 – Secure Access via SSH Tunnel
+```bash
+ssh -L 8080:10.10.0.1:80 dimas@10.10.0.1
+
+### Step 3 – Open Web
+```bash
+http://localhost:8080
+
+Closing SSH session immediately cuts web access.
+
+## AUTHOR
+
+Dimas Adi Prabowo
